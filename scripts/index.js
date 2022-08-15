@@ -5,34 +5,33 @@ let formElement = document.querySelector('.form');
 let nameInput = document.querySelector('#input-name');
 let occupationInput = document.querySelector('#input-occupation');
 let profileEditButton = document.querySelector('.profile__edit-button');
-let formSubmitButton = document.querySelector('.form__submit-button');
 let popupCloseButton = document.querySelector('.popup__close-button');
 
 let popupToggleClass = 'popup_opened';
 
-let name = nameElement.textContent;
+let user = nameElement.textContent;
 let occupation = occupationElement.textContent;
 
 function popupToggle() {
-  let elt = popupElement;
   let toggleClass = popupToggleClass;
-  if (!!elt.classList.contains(toggleClass)) {
-    elt.classList.remove(toggleClass);
+  if (!!popupElement.classList.contains(toggleClass)) {
+    console.log('popup removed');
+    popupElement.classList.remove(toggleClass);
   } else {
+    console.log('popup added');
+    nameInput.value = user;
     occupationInput.value = occupation;
-    nameInput.value = name;
-    elt.classList.add(toggleClass);
+    popupElement.classList.add(toggleClass);
   }
 }
 
 function formSubmitHandler (evt) {
+    console.log('submit');
     evt.preventDefault();
-    name = nameInput.value;
+    user = nameInput.value;
     occupation = occupationInput.value;
-    nameElement.textContent = name;
+    nameElement.textContent = user;
     occupationElement.textContent = occupation;
-    occupationInput.value = occupation;
-    nameInput.value = name;
     popupToggle();
 }
 
