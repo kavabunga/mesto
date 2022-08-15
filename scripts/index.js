@@ -13,15 +13,14 @@ let popupToggleClass = 'popup_opened';
 let name = nameElement.textContent;
 let occupation = occupationElement.textContent;
 
-occupationInput.placeholder = occupation;
-nameInput.placeholder = name;
-
 function popupToggle() {
   let elt = popupElement;
   let toggleClass = popupToggleClass;
   if (!!elt.classList.contains(toggleClass)) {
     elt.classList.remove(toggleClass);
   } else {
+    occupationInput.value = occupation;
+    nameInput.value = name;
     elt.classList.add(toggleClass);
   }
 }
@@ -32,6 +31,9 @@ function formSubmitHandler (evt) {
     occupation = occupationInput.value;
     nameElement.textContent = name;
     occupationElement.textContent = occupation;
+    occupationInput.value = occupation;
+    nameInput.value = name;
+    popupToggle();
 }
 
 profileEditButton.addEventListener('click', popupToggle);

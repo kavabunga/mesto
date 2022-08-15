@@ -9,6 +9,8 @@
   background-color: transparent;
   border: 2px solid #FFFFFF;
   border-radius: 2px;
+  background: transparent url('../../../images/profile__add-button.svg') no-repeat center / cover;
+  background-size: 16px auto;
   transition: opacity .1s ease;
 }
 
@@ -20,5 +22,6 @@
   .profile__add-button {
     width: 150px;
     margin-left: auto;
+    background-size: 22px auto;
   }
 }
