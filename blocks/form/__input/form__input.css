@@ -1,0 +1,45 @@
+.form__input {
+  width: 100%;
+  padding: 0;
+  padding-bottom: 9px;
+  margin: 0;
+  font-family: inherit;
+  color: black;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
+}
+
+.form__input::-webkit-input-placeholder {
+  font-family: inherit;
+  color: black;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.form__input::-moz-placeholder {
+  font-family: inherit;
+  color: black;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.form__input::-ms-input-placeholder {
+  font-family: inherit;
+  color: black;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.form__input::placeholder {
+  font-family: inherit;
+  color: black;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+}

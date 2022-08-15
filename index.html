@@ -7,7 +7,100 @@
   <link rel="stylesheet" href="./pages/index.css">
 </head>
 <body>
-
-
+  <div class="page">
+    <header class="header page__element">
+      <img src="./images/header__logo_color_white.svg" alt="Логотип сервиса Mesto" class="header__logo">
+    </header>
+    <div class="page__line"></div>
+    <main class="content page__element">
+      <section class="profile">
+        <img src="./images/profile__image.jpg" alt="Жак-Ив Кусто" class="profile__image">
+        <div class="profile__info">
+          <h1 class="profile__name">Жак-Ив Кусто</h1>
+          <p class="profile__occupation">Исследователь океана</p>
+          <button class="profile__edit-button"><svg class="profile__edit-icon" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.75 1.2462L2.20283 6.82495L1.21226 5.81452L6.74528 0.25L7.75 1.2462ZM0.25 7.75L1.7217 7.30882L0.688679 6.31262L0.25 7.75Z" fill="white"/>
+            </svg>
+            </button>
+        </div>
+        <button class="profile__add-button"><svg class="profile__add-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 7.11111H8.88889V0H7.11111V7.11111H0V8.88889H7.11111V16H8.88889V8.88889H16V7.11111Z" fill="white"/>
+          </svg>
+        </button>
+      </section>
+      <section>
+        <ul class="elements">
+          <li>
+            <article class="element">
+              <img src="./images/place__image_altai.jpg" alt="Алтай" class="element__image">
+              <div class="element__text">
+                <h2 class="element__name">Алтайский край</h2>
+                <button class="element__heart-button"></button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="element">
+              <img src="./images/place__image_dagestan.jpg" alt="Дагестан" class="element__image">
+              <div class="element__text">
+                <h2 class="element__name">Дагестан</h2>
+                <button class="element__heart-button"></button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="element">
+              <img src="./images/place__image_dombay.jpg" alt="Домбай" class="element__image">
+              <div class="element__text">
+                <h2 class="element__name">Домбай</h2>
+                <button class="element__heart-button"></button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="element">
+              <img src="./images/place__image_elbrus.jpg" alt="Эльбрус" class="element__image">
+              <div class="element__text">
+                <h2 class="element__name">Эльбрус</h2>
+                <button class="element__heart-button"></button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="element">
+              <img src="./images/place__image_tyumen.jpg" alt="Тюмень" class="element__image">
+              <div class="element__text">
+                <h2 class="element__name">Тюмень</h2>
+                <button class="element__heart-button"></button>
+              </div>
+            </article>
+          </li>
+          <li>
+            <article class="element">
+              <img src="./images/place__imge_karachaevo-cherkessiya.jpg" alt="Карачаево-Черкессия" class="element__image">
+              <div class="element__text">
+                <h2 class="element__name">Карачаево-Черкессия</h2>
+                <button class="element__heart-button"></button>
+              </div>
+            </article>
+          </li>
+        </ul>
+      </section>
+    </main>
+    <footer class="footer page__element">
+      <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
+    </footer>
+    <div class="popup">
+      <form action="" class="form">
+        <h2 class="form__title">Редактировать профиль</h2>
+        <fieldset class="form__profile-info">
+          <input id="input-name" type="text" class="form__input" name="name" placeholder="Жак-Ив Кусто">
+          <input id="input-occupation" type="text" class="form__input" name="occupation" placeholder="Исследователь океана">
+        </fieldset>
+        <button class="form__submit-button">Сохранить</button>
+        <button class="popup__close-button"></button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>

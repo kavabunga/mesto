@@ -1,0 +1,8 @@
+.element__text {
+  padding: 22px 21px 26px 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  color: black;
+}
