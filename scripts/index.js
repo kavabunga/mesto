@@ -15,10 +15,8 @@ let occupation = occupationElement.textContent;
 function popupToggle() {
   let toggleClass = popupToggleClass;
   if (!!popupElement.classList.contains(toggleClass)) {
-    console.log('popup removed');
     popupElement.classList.remove(toggleClass);
   } else {
-    console.log('popup added');
     nameInput.value = user;
     occupationInput.value = occupation;
     popupElement.classList.add(toggleClass);
@@ -26,7 +24,6 @@ function popupToggle() {
 }
 
 function formSubmitHandler (evt) {
-    console.log('submit');
     evt.preventDefault();
     user = nameInput.value;
     occupation = occupationInput.value;
