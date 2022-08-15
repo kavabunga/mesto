@@ -11,7 +11,13 @@
   line-height: 17px;
   text-align: center;
   border: none;
+  transition: opacity .1s ease;
 }
+
+.form__submit-button:hover {
+  opacity: .8;
+}
+
 
 @media screen and (min-width: 720px) {
   .form__submit-button {
