@@ -16,6 +16,7 @@
 
 .form__submit-button:hover {
   opacity: .8;
+  cursor: url('./../../../images/cursor.svg') 12 5, pointer;
 }
 
 
