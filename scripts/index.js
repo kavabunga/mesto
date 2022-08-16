@@ -10,13 +10,12 @@ let popupCloseButton = document.querySelector('.popup__close-button');
 let popupToggleClass = 'popup_opened';
 
 function popupToggle() {
-  let toggleClass = popupToggleClass;
-  if (popupElement.classList.contains(toggleClass)) {
-    popupElement.classList.remove(toggleClass);
+  if (popupElement.classList.contains(popupToggleClass)) {
+    popupElement.classList.remove(popupToggleClass);
   } else {
     nameInput.value = nameElement.textContent;
     occupationInput.value = occupationElement.textContent;
-    popupElement.classList.add(toggleClass);
+    popupElement.classList.add(popupToggleClass);
   }
 }
 
