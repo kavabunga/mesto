@@ -40,6 +40,6 @@
 @import url("../blocks/popup/__close-button/popup__close-button.css");
 
 @import url("../blocks/form/form.css");
-@import url("../blocks/form/__profile-info/form__profile-info.css");
+@import url("../blocks/form/__fieldset/form__fieldset.css");
 @import url("../blocks/form/__input/form__input.css");
 @import url("../blocks/form/__submit-button/form__submit-button.css");

@@ -1,4 +1,4 @@
-.form__profile-info {
+.form__fieldset {
   padding: 0;
   margin: 0;
   margin-bottom: 45px;
@@ -9,7 +9,7 @@
 }
 
 @media screen and (min-width: 720px) {
-  .form__profile-info {
+  .form__fieldset {
     margin-bottom: 48px;
   }
 }
