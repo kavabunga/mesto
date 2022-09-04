@@ -3,7 +3,8 @@ const occupationElement = document.querySelector('.profile__occupation');
 const popupProfile = document.querySelector('.popup_type_edit-profile');
 const popupAddItem = document.querySelector('.popup_type_add-item');
 const popupPreview = document.querySelector('.popup_type_preview');
-// const formElement = document.querySelector('.form');
+const popupPreviewImage = popupPreview.querySelector('.popup__image');
+const popupPreviewCaption = popupPreview.querySelector('.popup__caption');
 const nameInput = popupProfile.querySelector('.form__input_name_name');
 const occupationInput = popupProfile.querySelector('.form__input_name_occupation');
 const postNameInput = popupAddItem.querySelector('.form__input_name_name');
@@ -93,7 +94,16 @@ function popupOpenAddPost () {
   popupOpen (popupAddItem);
 }
 
-function popupOpenPreview () {
+function popupOpenPreview (evt) {
+  const targetPost = evt.target.parentElement;
+  const post = {
+    name: targetPost.querySelector('.element__name').textContent,
+    link: targetPost.querySelector('.element__image').src,
+    alt: targetPost.querySelector('.element__image').alt
+  }
+  popupPreviewImage.src = post.link;
+  popupPreviewImage.alt = post.alt;
+  popupPreviewCaption.textContent = post.name;
   popupOpen (popupPreview);
 }
 
