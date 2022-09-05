@@ -57,33 +57,22 @@ function preparePost (name, link, template) {
   postImage.alt = name;
   postImage.addEventListener('click', () => {openPreviewPopup(name, link)});
   postName.textContent = name;
-  postRemoveButton.addEventListener('click', removePost);
+  postRemoveButton.addEventListener('click', () => {removePost(newPost)});
   postLikeButton.addEventListener('click', likePost);
   return newPost;
 };
 
 function renderPost (name, link, template, container) {
   container.prepend(preparePost(name, link, template));
-  clearPostInputs();
 }
 
-function clearPostInputs () {
-  postNameInput.value = '';
-  postImageLinkInput.value = '';
-}
-
-function removePost (evt) {
-  const targetPost = evt.target.parentElement;
+function removePost (targetPost) {
   targetPost.remove();
 };
 
 function likePost (evt) {
   const targetButton = evt.target;
-  if (targetButton.classList.contains(likeToggleClass)) {
-    targetButton.classList.remove(likeToggleClass);
-  } else {
-    targetButton.classList.add(likeToggleClass);
-  };
+  targetButton.classList.toggle(likeToggleClass);
 }
 
 initialCards.forEach(function (item) {
@@ -126,6 +115,7 @@ function handleAddItemFormSubmit (evt) {
   evt.preventDefault();
   renderPost(postNameInput.value, postImageLinkInput.value, templateCard, cardsContainer);
   closePopup(popupAddItem);
+  formAddItem.reset();
 }
 
 profileEditButton.addEventListener('click', openProfilePopup);
