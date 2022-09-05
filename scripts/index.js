@@ -5,14 +5,15 @@ const popupAddItem = document.querySelector('.popup_type_add-item');
 const popupPreview = document.querySelector('.popup_type_preview');
 const popupPreviewImage = popupPreview.querySelector('.popup__image');
 const popupPreviewCaption = popupPreview.querySelector('.popup__caption');
+const formProfile = document.querySelector('.form_type_edit-profile');
+const formAddItem = document.querySelector('.form_type_add-item');
 const nameInput = popupProfile.querySelector('.form__input_name_name');
 const occupationInput = popupProfile.querySelector('.form__input_name_occupation');
 const postNameInput = popupAddItem.querySelector('.form__input_name_name');
 const postImageLinkInput = popupAddItem.querySelector('.form__input_name_image-link');
 const profileEditButton = document.querySelector('.profile__edit-button');
 const addPostButton = document.querySelector('.profile__add-button')
-const popupCloseButtons = document.querySelectorAll('.popup__close-button');
-const elements = document.querySelectorAll('.element');
+const popups = document.querySelectorAll('.popup');
 const templateCard = document.querySelector('.card-template').content;
 const cardsContainer = document.querySelector('.elements');
 
@@ -46,7 +47,7 @@ const initialCards = [
   }
 ];
 
-function addPost (name, link, template, container) {
+function preparePost (name, link, template) {
   const newPost = template.querySelector('.element').cloneNode(true);
   const postImage = newPost.querySelector('.element__image');
   const postName = newPost.querySelector('.element__name');
@@ -54,12 +55,22 @@ function addPost (name, link, template, container) {
   const postLikeButton = newPost.querySelector('.element__heart-button');
   postImage.src = link;
   postImage.alt = name;
-  postImage.addEventListener('click', popupOpenPreview);
+  postImage.addEventListener('click', () => {openPreviewPopup(name, link)});
   postName.textContent = name;
   postRemoveButton.addEventListener('click', removePost);
   postLikeButton.addEventListener('click', likePost);
-  container.prepend(newPost);
+  return newPost;
 };
+
+function renderPost (name, link, template, container) {
+  container.prepend(preparePost(name, link, template));
+  clearPostInputs();
+}
+
+function clearPostInputs () {
+  postNameInput.value = '';
+  postImageLinkInput.value = '';
+}
 
 function removePost (evt) {
   const targetPost = evt.target.parentElement;
@@ -76,67 +87,52 @@ function likePost (evt) {
 }
 
 initialCards.forEach(function (item) {
-  console.log(item);
-  addPost(item.name, item.link, templateCard, cardsContainer);
+  renderPost(item.name, item.link, templateCard, cardsContainer);
 })
 
-function popupOpen (elem) {
-  elem.classList.add(popupToggleClass);
+function openPopup (targetPopup) {
+  targetPopup.classList.add(popupToggleClass);
 }
 
-function popupOpenProfile () {
+function openProfilePopup () {
   nameInput.value = nameElement.textContent;
   occupationInput.value = occupationElement.textContent;
-  popupOpen (popupProfile);
+  openPopup(popupProfile);
 }
 
-function popupOpenAddPost () {
-  popupOpen (popupAddItem);
+function openAddPostPopup () {
+  openPopup(popupAddItem);
 }
 
-function popupOpenPreview (evt) {
-  const targetPost = evt.target.parentElement;
-  const post = {
-    name: targetPost.querySelector('.element__name').textContent,
-    link: targetPost.querySelector('.element__image').src,
-    alt: targetPost.querySelector('.element__image').alt
-  }
-  popupPreviewImage.src = post.link;
-  popupPreviewImage.alt = post.alt;
-  popupPreviewCaption.textContent = post.name;
-  popupOpen (popupPreview);
+function openPreviewPopup (name, link) {
+  popupPreviewImage.src = link;
+  popupPreviewImage.alt = name;
+  popupPreviewCaption.textContent = name;
+  openPopup(popupPreview);
 }
 
-function popupClose (evt) {
-  const targetPopup = evt.target.parentElement.parentElement;
+function closePopup (targetPopup) {
   targetPopup.classList.remove(popupToggleClass);
 }
 
-function formProfileSubmitHandler (evt) {
+function handleProfileFormSubmit (evt) {
   evt.preventDefault();
   nameElement.textContent = nameInput.value;
   occupationElement.textContent = occupationInput.value;
-  popupClose(evt);
+  closePopup(popupProfile);
 }
 
-function formAddItemSubmitHandler (evt) {
+function handleAddItemFormSubmit (evt) {
   evt.preventDefault();
-  addPost(postNameInput.value, postImageLinkInput.value, templateCard, cardsContainer);
-  popupClose(evt);
+  renderPost(postNameInput.value, postImageLinkInput.value, templateCard, cardsContainer);
+  closePopup(popupAddItem);
 }
 
-profileEditButton.addEventListener('click', popupOpenProfile);
-addPostButton.addEventListener('click', popupOpenAddPost);
-
-Array.from(elements).forEach(function (item) {
-  item.querySelector('.element__image').addEventListener('click', popupOpenPreview);
-  item.querySelector('.element__delete-button').addEventListener('click', removePost);
-  item.querySelector('.element__heart-button').addEventListener('click', likePost);
+profileEditButton.addEventListener('click', openProfilePopup);
+addPostButton.addEventListener('click', openAddPostPopup);
+popups.forEach(function (item) {
+  const popupCloseButton = item.querySelector('.popup__close-button');
+  popupCloseButton.addEventListener('click', () => {closePopup(item)});
 });
-
-Array.from(popupCloseButtons).forEach(function (item) {
-  item.addEventListener('click', popupClose);
-});
-
-popupProfile.addEventListener('submit', formProfileSubmitHandler);
-popupAddItem.addEventListener('submit', formAddItemSubmitHandler);
+formProfile.addEventListener('submit', handleProfileFormSubmit);
+formAddItem.addEventListener('submit', handleAddItemFormSubmit);
