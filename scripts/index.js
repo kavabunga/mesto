@@ -12,7 +12,8 @@ const occupationInput = popupProfile.querySelector('.form__input_name_occupation
 const postNameInput = popupAddItem.querySelector('.form__input_name_name');
 const postImageLinkInput = popupAddItem.querySelector('.form__input_name_image-link');
 const profileEditButton = document.querySelector('.profile__edit-button');
-const addPostButton = document.querySelector('.profile__add-button')
+const addPostButton = document.querySelector('.profile__add-button');
+const postSubmitButton = formAddItem.querySelector('.form__submit-button');
 const popups = document.querySelectorAll('.popup');
 const templateCard = document.querySelector('.card-template').content;
 const cardsContainer = document.querySelector('.elements');
@@ -58,7 +59,7 @@ function preparePost (name, link, template) {
   postImage.addEventListener('click', () => {openPreviewPopup(name, link)});
   postName.textContent = name;
   postRemoveButton.addEventListener('click', () => {removePost(newPost)});
-  postLikeButton.addEventListener('click', likePost);
+  postLikeButton.addEventListener('click', () => {likePost(postLikeButton)});
   return newPost;
 };
 
@@ -70,9 +71,8 @@ function removePost (targetPost) {
   targetPost.remove();
 };
 
-function likePost (evt) {
-  const targetButton = evt.target;
-  targetButton.classList.toggle(likeToggleClass);
+function likePost (likeButton) {
+  likeButton.classList.toggle(likeToggleClass);
 }
 
 initialCards.forEach(function (item) {
@@ -81,7 +81,7 @@ initialCards.forEach(function (item) {
 
 function openPopup (targetPopup) {
   targetPopup.classList.add(popupToggleClass);
-  addEscListener();
+  document.addEventListener('keydown', handleEscPress)
 }
 
 function openProfilePopup () {
@@ -103,7 +103,7 @@ function openPreviewPopup (name, link) {
 
 function closePopup (targetPopup) {
   targetPopup.classList.remove(popupToggleClass);
-  removeEscListener();
+  document.removeEventListener('keydown', handleEscPress)
 }
 
 function handleEscPress (evt) {
@@ -113,16 +113,9 @@ function handleEscPress (evt) {
   };
 }
 
-function addEscListener () {
-  document.addEventListener('keydown', handleEscPress)
-}
-
-function removeEscListener () {
-  document.removeEventListener('keydown', handleEscPress)
-}
-
 function handlePopupOverlayClick (evt, target) {
-  if (evt.target === target) {
+  const popupCloseButton = target.querySelector('.popup__close-button');
+  if (evt.target === target || evt.target === popupCloseButton) {
     closePopup(target);
   };
 }
@@ -139,13 +132,13 @@ function handleAddItemFormSubmit (evt) {
   renderPost(postNameInput.value, postImageLinkInput.value, templateCard, cardsContainer);
   closePopup(popupAddItem);
   formAddItem.reset();
+  postSubmitButton.classList.add('form__submit-button_disabled');
+  postSubmitButton.setAttribute('disabled', 'disabled');
 }
 
 profileEditButton.addEventListener('click', openProfilePopup);
 addPostButton.addEventListener('click', openAddPostPopup);
 popups.forEach(function (item) {
-  const popupCloseButton = item.querySelector('.popup__close-button');
-  popupCloseButton.addEventListener('click', () => {closePopup(item)});
   item.addEventListener('click', (evt) => {handlePopupOverlayClick(evt, item)});
 });
 formProfile.addEventListener('submit', handleProfileFormSubmit);
