@@ -81,6 +81,7 @@ initialCards.forEach(function (item) {
 
 function openPopup (targetPopup) {
   targetPopup.classList.add(popupToggleClass);
+  addEscListener();
 }
 
 function openProfilePopup () {
@@ -102,6 +103,28 @@ function openPreviewPopup (name, link) {
 
 function closePopup (targetPopup) {
   targetPopup.classList.remove(popupToggleClass);
+  removeEscListener();
+}
+
+function handleEscPress (evt) {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    closePopup(document.querySelector(`.${popupToggleClass}`));
+  };
+}
+
+function addEscListener () {
+  document.addEventListener('keydown', handleEscPress)
+}
+
+function removeEscListener () {
+  document.removeEventListener('keydown', handleEscPress)
+}
+
+function handlePopupOverlayClick (evt, target) {
+  if (evt.target === target) {
+    closePopup(target);
+  };
 }
 
 function handleProfileFormSubmit (evt) {
@@ -123,6 +146,7 @@ addPostButton.addEventListener('click', openAddPostPopup);
 popups.forEach(function (item) {
   const popupCloseButton = item.querySelector('.popup__close-button');
   popupCloseButton.addEventListener('click', () => {closePopup(item)});
+  item.addEventListener('click', (evt) => {handlePopupOverlayClick(evt, item)});
 });
 formProfile.addEventListener('submit', handleProfileFormSubmit);
 formAddItem.addEventListener('submit', handleAddItemFormSubmit);
