@@ -34,8 +34,14 @@
         <h2 class="popup__title">Редактировать профиль</h2>
         <form class="form form_type_edit-profile" name="form">
           <fieldset class="form__fieldset">
-            <input type="text" class="form__input form__input_name_name" name="name" placeholder="Имя">
-            <input type="text" class="form__input form__input_name_occupation" name="occupation" placeholder="Профессия">
+            <label>
+              <input type="text" class="form__input form__input_name_name" name="input-name" placeholder="Имя" required minlength="2" maxlength="40">
+              <span class="form__input-error input-name-error"></span>
+            </label>
+            <label>
+              <input type="text" class="form__input form__input_name_occupation" name="input-occupation" placeholder="Профессия" required minlength="2" maxlength="200">
+              <span class="form__input-error input-occupation-error"></span>
+            </label>
           </fieldset>
           <button type="submit" class="form__submit-button">Сохранить</button>
         </form>
@@ -47,8 +53,14 @@
         <h2 class="popup__title">Новое место</h2>
         <form class="form form_type_add-item" name="form">
           <fieldset class="form__fieldset">
-            <input type="text" class="form__input form__input_name_name" name="name" placeholder="Название">
-            <input type="text" class="form__input form__input_name_image-link" name="image-link" placeholder="Ссылка на картинку">
+            <label>
+              <input type="text" class="form__input form__input_name_name" name="input-name" placeholder="Название" required minlength="2" maxlength="30">
+              <span class="form__input-error input-name-error"></span>
+            </label>
+            <label>
+              <input type="url" class="form__input form__input_name_image-link" name="input-image-link" placeholder="Ссылка на картинку" required>
+              <span class="form__input-error input-image-link-error"></span>
+            </label>
           </fieldset>
           <button type="submit" class="form__submit-button">Создать</button>
         </form>
@@ -74,5 +86,6 @@
     </li>
   </template>
   <script src="./scripts/index.js"></script>
+  <script src="./scripts/validate.js"></script>
 </body>
 </html>
