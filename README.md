@@ -18,6 +18,7 @@
   - [flexbox](https://www.doka.guide/css/flexbox-guide/ "Гайд по flexbox на Доке")
   - [grid](https://www.doka.guide/css/grid-guide/ "Гайд по grid на Доке")
 * Стили по умолчанию обнуляются плагином [normalize.css](https://necolas.github.io/normalize.css/)
+* Добавление карточек и валидация форм реализованы в методологии объектно-ориентированного программирования
 
 ### Макет
 

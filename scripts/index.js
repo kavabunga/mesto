@@ -1,4 +1,5 @@
 import { Card } from "./Card.js";
+import { FormValidator } from "./FormValidator.js";
 
 const nameElement = document.querySelector('.profile__name');
 const occupationElement = document.querySelector('.profile__occupation');
@@ -17,7 +18,6 @@ const profileEditButton = document.querySelector('.profile__edit-button');
 const addPostButton = document.querySelector('.profile__add-button');
 const postSubmitButton = formAddItem.querySelector('.form__submit-button');
 const popups = document.querySelectorAll('.popup');
-// const templateCard = document.querySelector('.card-template').content;
 const cardsContainer = document.querySelector('.elements');
 
 const popupToggleClass = 'popup_opened';
@@ -30,6 +30,14 @@ const postTemplate = {
   nameSelector: '.element__name',
   deleteButtonSelector: '.element__delete-button',
   likeButtonSelector: '.element__heart-button'
+};
+
+const validationConfig = {
+  formSelector: '.form',
+  inputSelector: '.form__input',
+  submitButtonSelector: '.form__submit-button',
+  inactiveButtonClass: 'form__submit-button_disabled',
+  inputErrorClass: 'form__input_type_error',
 };
 
 const initialCards = [
@@ -148,5 +156,14 @@ popups.forEach(function (item) {
 });
 formProfile.addEventListener('submit', handleProfileFormSubmit);
 formAddItem.addEventListener('submit', handleAddItemFormSubmit);
+
+//Здесь запустим валидацию
+(function enableValidation() {
+  const formList = Array.from(document.querySelectorAll(validationConfig.formSelector));
+  formList.forEach((formElement) => {
+    const formValidator = new FormValidator(validationConfig, formElement);
+    formValidator.enableValidation();
+  });
+})();
 
 export {openPreviewPopup, removePost, likePost};

@@ -1,6 +1,6 @@
 import {openPreviewPopup, removePost, likePost} from './index.js'
 
-class Card {
+export class Card {
   constructor(cardData, templateData) {
     this._image = cardData.image;
     this._name = cardData.name;
@@ -40,5 +40,3 @@ class Card {
     };
   };
 }
-
-export {Card};
