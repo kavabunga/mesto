@@ -40,6 +40,11 @@ export class FormValidator {
     }
   };
 
+  disableButton() {
+    this._buttonElement.classList.add(this._validationConfig.inactiveButtonClass);
+    this._buttonElement.setAttribute('disabled', 'disabled');
+  };
+
   _setEventListeners() {
     this._toggleButtonState();
     this._inputList.forEach((inputElement) => {

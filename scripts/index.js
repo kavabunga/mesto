@@ -15,13 +15,12 @@ const occupationInput = popupProfile.querySelector('.form__input_name_occupation
 const postNameInput = popupAddItem.querySelector('.form__input_name_name');
 const postImageLinkInput = popupAddItem.querySelector('.form__input_name_image-link');
 const profileEditButton = document.querySelector('.profile__edit-button');
-const addPostButton = document.querySelector('.profile__add-button');
+const postAddButton = document.querySelector('.profile__add-button');
 const postSubmitButton = formAddItem.querySelector('.form__submit-button');
 const popups = document.querySelectorAll('.popup');
 const cardsContainer = document.querySelector('.elements');
 
 const popupToggleClass = 'popup_opened';
-const likeToggleClass = 'element__heart-button_active';
 
 const postTemplate = {
   templateSelector: '.card-template',
@@ -29,7 +28,8 @@ const postTemplate = {
   imageSelector: '.element__image',
   nameSelector: '.element__name',
   deleteButtonSelector: '.element__delete-button',
-  likeButtonSelector: '.element__heart-button'
+  likeButtonSelector: '.element__heart-button',
+  likeToggleClass: 'element__heart-button_active'
 };
 
 const validationConfig = {
@@ -39,6 +39,9 @@ const validationConfig = {
   inactiveButtonClass: 'form__submit-button_disabled',
   inputErrorClass: 'form__input_type_error',
 };
+
+const postForm = new FormValidator(validationConfig, formAddItem);
+const profileForm = new FormValidator(validationConfig, formProfile);
 
 const initialCards = [
   {
@@ -72,20 +75,12 @@ function preparePost (name, link, template) {
     image: link,
     name: name
   };
-  const card = new Card(cardData, template);
+  const card = new Card(cardData, template, openPreviewPopup);
   return card.generateCard();
 };
 
 function renderPost (name, link, template, container) {
   container.prepend(preparePost(name, link, template));
-}
-
-function removePost (targetPost) {
-  targetPost.remove();
-};
-
-function likePost (likeButton) {
-  likeButton.classList.toggle(likeToggleClass);
 }
 
 initialCards.forEach(function (item) {
@@ -145,25 +140,18 @@ function handleAddItemFormSubmit (evt) {
   renderPost(postNameInput.value, postImageLinkInput.value, postTemplate, cardsContainer);
   closePopup(popupAddItem);
   formAddItem.reset();
-  postSubmitButton.classList.add('form__submit-button_disabled');
-  postSubmitButton.setAttribute('disabled', 'disabled');
+  postForm.disableButton();
 }
 
 profileEditButton.addEventListener('click', openProfilePopup);
-addPostButton.addEventListener('click', openAddPostPopup);
+postAddButton.addEventListener('click', openAddPostPopup);
 popups.forEach(function (item) {
   item.addEventListener('click', (evt) => {handlePopupOverlayClick(evt, item)});
 });
 formProfile.addEventListener('submit', handleProfileFormSubmit);
 formAddItem.addEventListener('submit', handleAddItemFormSubmit);
 
-//Здесь запустим валидацию
 (function enableValidation() {
-  const formList = Array.from(document.querySelectorAll(validationConfig.formSelector));
-  formList.forEach((formElement) => {
-    const formValidator = new FormValidator(validationConfig, formElement);
-    formValidator.enableValidation();
-  });
+  postForm.enableValidation();
+  profileForm.enableValidation();
 })();
-
-export {openPreviewPopup, removePost, likePost};

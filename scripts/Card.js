@@ -1,42 +1,54 @@
-import {openPreviewPopup, removePost, likePost} from './index.js'
-
 export class Card {
-  constructor(cardData, templateData) {
+  constructor(cardData, templateData, openPreviewPopup) {
     this._image = cardData.image;
     this._name = cardData.name;
-    this._templateSelector = templateData.templateSelector;
-    this._elementSelector = templateData.elementSelector;
-    this._imageSelector = templateData.imageSelector;
-    this._nameSelector = templateData.nameSelector;
-    this._deleteButtonSelector = templateData.deleteButtonSelector;
-    this._likeButtonSelector = templateData.likeButtonSelector;
+    this._templateElement = document.querySelector(templateData.templateSelector).content.querySelector(templateData.elementSelector);
+    this._element = this._getTemplate();
+    this._imageElement = this._element.querySelector(templateData.imageSelector);
+    this._nameElement = this._element.querySelector(templateData.nameSelector);
+    this._deleteButtonElement = this._element.querySelector(templateData.deleteButtonSelector);
+    this._likeButtonElement = this._element.querySelector(templateData.likeButtonSelector);
+    this._likeToggleClass = templateData.likeToggleClass;
+    this._openPreviewPopup = openPreviewPopup;
   };
 
   _getTemplate() {
-    const cardElement = document.querySelector(this._templateSelector).content.querySelector(this._elementSelector).cloneNode(true);
+    const cardElement = this._templateElement.cloneNode(true);
     return cardElement;
   };
 
   _setEventListeners() {
-    this._element.addEventListener('click', (evt) => {this._handleElementClick(evt)});
+    this._imageElement.addEventListener('click', () => {this._handleImageElementClick()});
+    this._deleteButtonElement.addEventListener('click', () => {this._handleDeleteButtonElementClick()});
+    this._likeButtonElement.addEventListener('click', () => {this._handleLikeButtonElementClick()});
   };
 
   generateCard() {
-    this._element = this._getTemplate(this._templateSelector);
     this._setEventListeners();
-    this._element.querySelector(this._imageSelector).src = this._image;
-    this._element.querySelector(this._imageSelector).alt = this._name;
-    this._element.querySelector(this._nameSelector).textContent = this._name;
+    this._imageElement.src = this._image;
+    this._imageElement.alt = this._name;
+    this._nameElement.textContent = this._name;
     return this._element;
   };
 
-  _handleElementClick(evt) {
-    if (evt.target === this._element.querySelector(this._imageSelector)) {
-      openPreviewPopup(this._name, this._image);
-    } else if (evt.target === this._element.querySelector(this._deleteButtonSelector)) {
-      removePost(this._element);
-    } else if (evt.target === this._element.querySelector(this._likeButtonSelector)) {
-      likePost(this._element.querySelector(this._likeButtonSelector));
-    };
+  _handleImageElementClick() {
+    this._openPreviewPopup(this._name, this._image);
+  }
+
+  _handleDeleteButtonElementClick() {
+    this._removePost();
+  }
+
+  _handleLikeButtonElementClick() {
+    this._likePost();
+  }
+
+  _removePost() {
+    this._element.remove();
   };
+
+  _likePost() {
+    this._likeButtonElement.classList.toggle(this._likeToggleClass);
+  }
+
 }
