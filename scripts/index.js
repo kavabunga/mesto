@@ -1,3 +1,5 @@
+import { Card } from "./Card.js";
+
 const nameElement = document.querySelector('.profile__name');
 const occupationElement = document.querySelector('.profile__occupation');
 const popupProfile = document.querySelector('.popup_type_edit-profile');
@@ -15,11 +17,20 @@ const profileEditButton = document.querySelector('.profile__edit-button');
 const addPostButton = document.querySelector('.profile__add-button');
 const postSubmitButton = formAddItem.querySelector('.form__submit-button');
 const popups = document.querySelectorAll('.popup');
-const templateCard = document.querySelector('.card-template').content;
+// const templateCard = document.querySelector('.card-template').content;
 const cardsContainer = document.querySelector('.elements');
 
 const popupToggleClass = 'popup_opened';
 const likeToggleClass = 'element__heart-button_active';
+
+const postTemplate = {
+  templateSelector: '.card-template',
+  elementSelector: '.element',
+  imageSelector: '.element__image',
+  nameSelector: '.element__name',
+  deleteButtonSelector: '.element__delete-button',
+  likeButtonSelector: '.element__heart-button'
+};
 
 const initialCards = [
   {
@@ -49,18 +60,12 @@ const initialCards = [
 ];
 
 function preparePost (name, link, template) {
-  const newPost = template.querySelector('.element').cloneNode(true);
-  const postImage = newPost.querySelector('.element__image');
-  const postName = newPost.querySelector('.element__name');
-  const postRemoveButton = newPost.querySelector('.element__delete-button');
-  const postLikeButton = newPost.querySelector('.element__heart-button');
-  postImage.src = link;
-  postImage.alt = name;
-  postImage.addEventListener('click', () => {openPreviewPopup(name, link)});
-  postName.textContent = name;
-  postRemoveButton.addEventListener('click', () => {removePost(newPost)});
-  postLikeButton.addEventListener('click', () => {likePost(postLikeButton)});
-  return newPost;
+  const cardData = {
+    image: link,
+    name: name
+  };
+  const card = new Card(cardData, template);
+  return card.generateCard();
 };
 
 function renderPost (name, link, template, container) {
@@ -76,7 +81,7 @@ function likePost (likeButton) {
 }
 
 initialCards.forEach(function (item) {
-  renderPost(item.name, item.link, templateCard, cardsContainer);
+  renderPost(item.name, item.link, postTemplate, cardsContainer);
 })
 
 function openPopup (targetPopup) {
@@ -129,7 +134,7 @@ function handleProfileFormSubmit (evt) {
 
 function handleAddItemFormSubmit (evt) {
   evt.preventDefault();
-  renderPost(postNameInput.value, postImageLinkInput.value, templateCard, cardsContainer);
+  renderPost(postNameInput.value, postImageLinkInput.value, postTemplate, cardsContainer);
   closePopup(popupAddItem);
   formAddItem.reset();
   postSubmitButton.classList.add('form__submit-button_disabled');
@@ -143,3 +148,5 @@ popups.forEach(function (item) {
 });
 formProfile.addEventListener('submit', handleProfileFormSubmit);
 formAddItem.addEventListener('submit', handleAddItemFormSubmit);
+
+export {openPreviewPopup, removePost, likePost};
