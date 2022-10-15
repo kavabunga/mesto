@@ -1,4 +1,5 @@
 import './index.css';
+import Section from "../scripts/Section.js";
 import { Card } from "../scripts/Card.js";
 import { FormValidator } from "../scripts/FormValidator.js";
 
@@ -19,7 +20,7 @@ const profileEditButton = document.querySelector('.profile__edit-button');
 const postAddButton = document.querySelector('.profile__add-button');
 const postSubmitButton = formAddItem.querySelector('.form__submit-button');
 const popups = document.querySelectorAll('.popup');
-const cardsContainer = document.querySelector('.elements');
+const cardsContainerSelector = '.elements';
 
 const popupToggleClass = 'popup_opened';
 
@@ -71,22 +72,35 @@ const initialCards = [
   }
 ];
 
-function preparePost (name, link, template) {
-  const cardData = {
-    image: link,
-    name: name
-  };
-  const card = new Card(cardData, template, openPreviewPopup);
-  return card.generateCard();
-};
+const postsSection = new Section({
+  items: initialCards,
+  renderer: (item) => {
+    const card = new Card(item, postTemplate, openPreviewPopup)
+    const cardElement = card.generateCard();
+    postsSection.addItem(cardElement);
+    }
+  },
+  cardsContainerSelector
+);
 
-function renderPost (name, link, template, container) {
-  container.prepend(preparePost(name, link, template));
-}
+postsSection.renderItems();
 
-initialCards.forEach(function (item) {
-  renderPost(item.name, item.link, postTemplate, cardsContainer);
-})
+// function preparePost (name, link, template) {
+//   const cardData = {
+//     image: link,
+//     name: name
+//   };
+//   const card = new Card(cardData, template, openPreviewPopup);
+//   return card.generateCard();
+// };
+
+// function renderPost (name, link, template, container) {
+//   container.prepend(preparePost(name, link, template));
+// }
+
+// initialCards.forEach(function (item) {
+//   renderPost(item.name, item.link, postTemplate, cardsContainer);
+// })
 
 function openPopup (targetPopup) {
   targetPopup.classList.add(popupToggleClass);
