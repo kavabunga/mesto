@@ -1,9 +1,7 @@
-export class Card {
+export default class Card {
   constructor({name, link}, templateData, handleCardClick) {
     this._image = link;
     this._name = name;
-    console.log('this._image: ' + this._image);
-    console.log('this._name: ' + this._name);
     this._templateElement = document.querySelector(templateData.templateSelector).content.querySelector(templateData.elementSelector);
     this._element = this._getTemplate();
     this._imageElement = this._element.querySelector(templateData.imageSelector);
