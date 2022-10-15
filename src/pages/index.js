@@ -1,5 +1,6 @@
-import { Card } from "./Card.js";
-import { FormValidator } from "./FormValidator.js";
+import './index.css';
+import { Card } from "../scripts/Card.js";
+import { FormValidator } from "../scripts/FormValidator.js";
 
 const nameElement = document.querySelector('.profile__name');
 const occupationElement = document.querySelector('.profile__occupation');
