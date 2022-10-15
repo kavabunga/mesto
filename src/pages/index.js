@@ -2,46 +2,82 @@ import './index.css';
 import {
   nameElement,
   occupationElement,
-  popupProfile,
-  popupAddItem,
-  popupPreview,
-  popupPreviewImage,
-  popupPreviewCaption,
-  formProfile,
-  formAddItem,
-  nameInput,
-  occupationInput,
-  postNameInput,
-  postImageLinkInput,
+  // popupProfile,
+  // popupAddItem,
+  nameElementSelector,
+  occupationElementSelector,
+  popupProfileSelector,
+  popupAddItemSelector,
+  // popupPreview,
+  // popupPreviewImage,
+  // popupPreviewCaption,
+  popupPreviewSelector,
+  popupPreviewImageSelector,
+  popupPreviewCaptionSelector,
+  // formProfile,
+  // formAddItem,
+  formProfileSelector,
+  formAddItemSelector,
+  // nameInput,
+  // occupationInput,
+  // postNameInput,
+  // postImageLinkInput,
   profileEditButton,
   postAddButton,
-  postSubmitButton,
+  // postSubmitButton,
   popups,
   cardsContainerSelector,
   popupToggleClass,
   postTemplate,
   validationConfig,
   initialCards
-} from "../utils/constants.js";
-import Section from "../scripts/Section.js";
-import { Card } from "../scripts/Card.js";
-import { FormValidator } from "../scripts/FormValidator.js";
+} from '../utils/constants.js';
+import Section from '../scripts/Section.js';
+import { Popup, PopupWithImage, PopupWithForm } from '../components/Popup.js';
+import { Card } from '../scripts/Card.js';
+import { FormValidator } from '../scripts/FormValidator.js';
 
-const postForm = new FormValidator(validationConfig, formAddItem);
-const profileForm = new FormValidator(validationConfig, formProfile);
+const addItemValidator = new FormValidator(validationConfig, formAddItemSelector);
+const editProfileValidator = new FormValidator(validationConfig, formProfileSelector);
+
+const imagePreviewPopup = new PopupWithImage(popupPreviewSelector);
+imagePreviewPopup.setEventListeners();
+
+function renderPost (item) {
+  const card = new Card(item, postTemplate, () => {
+    imagePreviewPopup.open(item);
+  });
+  const cardElement = card.generateCard();
+  postsSection.addItem(cardElement);
+};
+
+const addItemPopup = new PopupWithForm(popupAddItemSelector, (evt) => {
+  evt.preventDefault();
+  const values = addItemPopup._getInputValues();
+  renderPost(values);
+  addItemPopup.close();
+  addItemValidator.disableButton();
+});
+addItemPopup.setEventListeners();
+
+const profilePopup = new PopupWithForm(popupProfileSelector, (evt) => {
+  evt.preventDefault();
+  const values = profilePopup._getInputValues();
+  nameElement.textContent = values.name;
+  occupationElement.textContent = values.occupation;
+  profilePopup.close();
+})
+profilePopup.setEventListeners();
 
 const postsSection = new Section({
   items: initialCards,
-  renderer: (item) => {
-    const card = new Card(item, postTemplate, openPreviewPopup)
-    const cardElement = card.generateCard();
-    postsSection.addItem(cardElement);
-    }
+  renderer: (item) => renderPost(item)
   },
   cardsContainerSelector
 );
-
 postsSection.renderItems();
+
+
 
 // function preparePost (name, link, template) {
 //   const cardData = {
@@ -60,71 +96,71 @@ postsSection.renderItems();
 //   renderPost(item.name, item.link, postTemplate, cardsContainer);
 // })
 
-function openPopup (targetPopup) {
-  targetPopup.classList.add(popupToggleClass);
-  document.addEventListener('keydown', handleEscPress)
-}
+// function openPopup (targetPopup) {
+//   targetPopup.classList.add(popupToggleClass);
+//   document.addEventListener('keydown', handleEscPress)
+// }
 
-function openProfilePopup () {
-  nameInput.value = nameElement.textContent;
-  occupationInput.value = occupationElement.textContent;
-  openPopup(popupProfile);
-}
+// function openProfilePopup () {
+//   nameInput.value = nameElement.textContent;
+//   occupationInput.value = occupationElement.textContent;
+//   openPopup(popupProfile);
+// }
 
-function openAddPostPopup () {
-  openPopup(popupAddItem);
-}
+// function openAddPostPopup () {
+//   openPopup(popupAddItem);
+// }
 
-function openPreviewPopup (name, link) {
-  popupPreviewImage.src = link;
-  popupPreviewImage.alt = name;
-  popupPreviewCaption.textContent = name;
-  openPopup(popupPreview);
-}
+// function openPreviewPopup (name, link) {
+//   popupPreviewImage.src = link;
+//   popupPreviewImage.alt = name;
+//   popupPreviewCaption.textContent = name;
+//   openPopup(popupPreview);
+// }
 
-function closePopup (targetPopup) {
-  targetPopup.classList.remove(popupToggleClass);
-  document.removeEventListener('keydown', handleEscPress)
-}
+// function closePopup (targetPopup) {
+//   targetPopup.classList.remove(popupToggleClass);
+//   document.removeEventListener('keydown', handleEscPress)
+// }
 
-function handleEscPress (evt) {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    closePopup(document.querySelector(`.${popupToggleClass}`));
-  };
-}
+// function handleEscPress (evt) {
+//   if (evt.key === 'Escape') {
+//     evt.preventDefault();
+//     closePopup(document.querySelector(`.${popupToggleClass}`));
+//   };
+// }
 
-function handlePopupOverlayClick (evt, target) {
-  const popupCloseButton = target.querySelector('.popup__close-button');
-  if (evt.target === target || evt.target === popupCloseButton) {
-    closePopup(target);
-  };
-}
+// function handlePopupOverlayClick (evt, target) {
+//   const popupCloseButton = target.querySelector('.popup__close-button');
+//   if (evt.target === target || evt.target === popupCloseButton) {
+//     closePopup(target);
+//   };
+// }
 
-function handleProfileFormSubmit (evt) {
-  evt.preventDefault();
-  nameElement.textContent = nameInput.value;
-  occupationElement.textContent = occupationInput.value;
-  closePopup(popupProfile);
-}
+// function handleeditProfileValidatorSubmit (evt) {
+//   evt.preventDefault();
+//   nameElement.textContent = nameInput.value;
+//   occupationElement.textContent = occupationInput.value;
+//   closePopup(popupProfile);
+// }
 
-function handleAddItemFormSubmit (evt) {
-  evt.preventDefault();
-  renderPost(postNameInput.value, postImageLinkInput.value, postTemplate, cardsContainer);
-  closePopup(popupAddItem);
-  formAddItem.reset();
-  postForm.disableButton();
-}
+// function handleAddItemFormSubmit (evt) {
+//   evt.preventDefault();
+//   renderPost(postNameInput.value, postImageLinkInput.value, postTemplate, cardsContainer);
+//   closePopup(popupAddItem);
+//   formAddItem.reset();
+//   addItemValidator.disableButton();
+// }
 
-profileEditButton.addEventListener('click', openProfilePopup);
-postAddButton.addEventListener('click', openAddPostPopup);
-popups.forEach(function (item) {
-  item.addEventListener('click', (evt) => {handlePopupOverlayClick(evt, item)});
-});
-formProfile.addEventListener('submit', handleProfileFormSubmit);
-formAddItem.addEventListener('submit', handleAddItemFormSubmit);
+profileEditButton.addEventListener('click', () => profilePopup.open());
+postAddButton.addEventListener('click', () => addItemPopup.open());
+// popups.forEach(function (item) {
+//   item.addEventListener('click', (evt) => {handlePopupOverlayClick(evt, item)});
+// });
+// formProfile.addEventListener('submit', handleeditProfileValidatorSubmit);
+// formAddItem.addEventListener('submit', handleAddItemFormSubmit);
 
 (function enableValidation() {
-  postForm.enableValidation();
-  profileForm.enableValidation();
+  addItemValidator.enableValidation();
+  editProfileValidator.enableValidation();
 })();

@@ -1,7 +1,9 @@
 export class Card {
-  constructor({name, link}, templateData, openPreviewPopup) {
+  constructor({name, link}, templateData, handleCardClick) {
     this._image = link;
     this._name = name;
+    console.log('this._image: ' + this._image);
+    console.log('this._name: ' + this._name);
     this._templateElement = document.querySelector(templateData.templateSelector).content.querySelector(templateData.elementSelector);
     this._element = this._getTemplate();
     this._imageElement = this._element.querySelector(templateData.imageSelector);
@@ -9,7 +11,7 @@ export class Card {
     this._deleteButtonElement = this._element.querySelector(templateData.deleteButtonSelector);
     this._likeButtonElement = this._element.querySelector(templateData.likeButtonSelector);
     this._likeToggleClass = templateData.likeToggleClass;
-    this._openPreviewPopup = openPreviewPopup;
+    this._handleCardClick = handleCardClick;
   };
 
   _getTemplate() {
@@ -18,9 +20,9 @@ export class Card {
   };
 
   _setEventListeners() {
-    this._imageElement.addEventListener('click', () => {this._handleImageElementClick()});
-    this._deleteButtonElement.addEventListener('click', () => {this._handleDeleteButtonElementClick()});
-    this._likeButtonElement.addEventListener('click', () => {this._handleLikeButtonElementClick()});
+    this._imageElement.addEventListener('click', this._handleCardClick);
+    this._deleteButtonElement.addEventListener('click', this._handleDeleteButtonElementClick.bind(this));
+    this._likeButtonElement.addEventListener('click', this._handleLikeButtonElementClick.bind(this));
   };
 
   generateCard() {
@@ -31,9 +33,9 @@ export class Card {
     return this._element;
   };
 
-  _handleImageElementClick() {
-    this._openPreviewPopup(this._name, this._image);
-  }
+  // _handleImageElementClick() {
+  //   this._openPreviewPopup(this._name, this._image);
+  // }
 
   _handleDeleteButtonElementClick() {
     this._removePost();
