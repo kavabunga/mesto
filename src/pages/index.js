@@ -32,6 +32,7 @@ import {
   validationConfig,
   initialCards
 } from '../utils/constants.js';
+import UserInfo from '../components/UserInfo.js';
 import Section from '../scripts/Section.js';
 import { Popup, PopupWithImage, PopupWithForm } from '../components/Popup.js';
 import { Card } from '../scripts/Card.js';
@@ -42,6 +43,8 @@ const editProfileValidator = new FormValidator(validationConfig, formProfileSele
 
 const imagePreviewPopup = new PopupWithImage(popupPreviewSelector);
 imagePreviewPopup.setEventListeners();
+
+const userInfo = new UserInfo(nameElementSelector, occupationElementSelector);
 
 function renderPost (item) {
   const card = new Card(item, postTemplate, () => {
@@ -63,8 +66,7 @@ addItemPopup.setEventListeners();
 const profilePopup = new PopupWithForm(popupProfileSelector, (evt) => {
   evt.preventDefault();
   const values = profilePopup._getInputValues();
-  nameElement.textContent = values.name;
-  occupationElement.textContent = values.occupation;
+  userInfo.setUserInfo(values);
   profilePopup.close();
 })
 profilePopup.setEventListeners();
@@ -152,7 +154,11 @@ postsSection.renderItems();
 //   addItemValidator.disableButton();
 // }
 
-profileEditButton.addEventListener('click', () => profilePopup.open());
+profileEditButton.addEventListener('click', () => {
+  const values = userInfo.getUserInfo();
+  profilePopup.setInputValues(values);
+  profilePopup.open()
+});
 postAddButton.addEventListener('click', () => addItemPopup.open());
 // popups.forEach(function (item) {
 //   item.addEventListener('click', (evt) => {handlePopupOverlayClick(evt, item)});
