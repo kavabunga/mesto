@@ -1,27 +1,24 @@
-import {
-  popupToggleClass,
-  popupPreviewImageSelector,
-  popupPreviewCaptionSelector
-} from "../utils/constants.js";
 import Popup from "./Popup.js";
 
 export default class PopupWithImage extends Popup {
-  constructor(selector) {
-    super(selector);
+  constructor(selector, popupToggleClass, popupCloseButtonSelector, popupPreviewImageSelector, popupPreviewCaptionSelector) {
+    super(selector, popupToggleClass, popupCloseButtonSelector);
+    this._popupPreviewImageSelector = popupPreviewImageSelector;
+    this._popupPreviewCaptionSelector = popupPreviewCaptionSelector;
+    this._popupPreviewImage = this._getElements(popupPreviewImageSelector);
+    this._popupPreviewCaption = this._getElements(popupPreviewCaptionSelector);
   }
 
-  _getElements() {
-    this._popupPreviewImage = this._element.querySelector(popupPreviewImageSelector);
-    this._popupPreviewCaption = this._element.querySelector(popupPreviewCaptionSelector);
+  _getElements(selector) {
+    return this._element.querySelector(selector);
   }
 
   open({name, link}) {
     super.open();
-    this._getElements();
     this._popupPreviewImage.src = link;
     this._popupPreviewImage.alt = name;
     this._popupPreviewCaption.textContent = name;
-    this._element.classList.add(popupToggleClass);
+    this._element.classList.add(this._popupToggleClass);
   }
 
 }

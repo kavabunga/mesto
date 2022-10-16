@@ -2,9 +2,15 @@ import './index.css';
 import {
   nameElementSelector,
   occupationElementSelector,
+  popupToggleClass,
+  popupCloseButtonSelector,
   popupProfileSelector,
   popupAddItemSelector,
   popupPreviewSelector,
+  popupPreviewImageSelector,
+  popupPreviewCaptionSelector,
+  formSelector,
+  formInputSelector,
   formProfileSelector,
   formAddItemSelector,
   profileEditButton,
@@ -21,41 +27,56 @@ import PopupWithForm from '../components/PopupWithForm.js';
 import Card from '../components/Card.js';
 import FormValidator from '../components/FormValidator.js';
 
-const addItemValidator = new FormValidator(validationConfig, formAddItemSelector);
-const editProfileValidator = new FormValidator(validationConfig, formProfileSelector);
-const imagePreviewPopup = new PopupWithImage(popupPreviewSelector);
-imagePreviewPopup.setEventListeners();
+const postValidator = new FormValidator(validationConfig, formAddItemSelector);
+const profileValidator = new FormValidator(validationConfig, formProfileSelector);
+const previewPopup = new PopupWithImage(popupPreviewSelector, popupToggleClass, popupCloseButtonSelector, popupPreviewImageSelector, popupPreviewCaptionSelector);
+previewPopup.setEventListeners();
 const userInfo = new UserInfo(nameElementSelector, occupationElementSelector);
 
 function renderPost (item) {
+  const cardElement = createCard(item);
+  postsSection.addItem(cardElement);
+};
+
+function createCard(item) {
   const card = new Card(
     item,
     postTemplate,
     () => {
-      imagePreviewPopup.open(item);
+      previewPopup.open(item);
     }
   );
   const cardElement = card.generateCard();
-  postsSection.addItem(cardElement);
+  return cardElement
 };
 
-const addItemPopup = new PopupWithForm(
-  popupAddItemSelector, (evt) => {
+
+const postPopup = new PopupWithForm(
+  popupAddItemSelector,
+  popupToggleClass,
+  popupCloseButtonSelector,
+  formSelector,
+  formInputSelector,
+  (evt) => {
     evt.preventDefault();
-    const values = addItemPopup._getInputValues();
+    const values = postPopup.getInputValues();
     renderPost(values);
-    addItemPopup.close();
-    addItemValidator.disableButton();
+    postPopup.close();
+    postValidator.disableButton();
   }
 );
 
-addItemPopup.setEventListeners();
+postPopup.setEventListeners();
 
 const profilePopup = new PopupWithForm(
   popupProfileSelector,
+  popupToggleClass,
+  popupCloseButtonSelector,
+  formSelector,
+  formInputSelector,
   (evt) => {
     evt.preventDefault();
-    const values = profilePopup._getInputValues();
+    const values = profilePopup.getInputValues();
     userInfo.setUserInfo(values);
     profilePopup.close();
   }
@@ -75,10 +96,14 @@ postsSection.renderItems();
 profileEditButton.addEventListener('click', () => {
   const values = userInfo.getUserInfo();
   profilePopup.setInputValues(values);
-  profilePopup.open()
+  profileValidator.resetValidation();
+  profilePopup.open();
 });
 
-postAddButton.addEventListener('click', () => addItemPopup.open());
+postAddButton.addEventListener('click', () => {
+  postValidator.resetValidation();
+  postPopup.open();
+});
 
-addItemValidator.enableValidation();
-editProfileValidator.enableValidation();
+postValidator.enableValidation();
+profileValidator.enableValidation();

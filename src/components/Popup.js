@@ -1,22 +1,19 @@
-import {
-  popupToggleClass,
-  popupCloseButtonSelector
-} from "../utils/constants.js";
-
 export default class Popup {
-  constructor(selector) {
+  constructor(selector, popupToggleClass, popupCloseButtonSelector) {
     this._element = document.querySelector(selector);
     this._popupCloseButton = this._element.querySelector(popupCloseButtonSelector);
+    this._popupToggleClass = popupToggleClass;
+    this._handleEscClose = this._handleEscClose.bind(this);
   }
 
   open() {
-    this._element.classList.add(popupToggleClass);
-    document.addEventListener('keydown', (evt) => this._handleEscClose(evt))
+    this._element.classList.add(this._popupToggleClass);
+    document.addEventListener('keydown', this._handleEscClose)
   }
 
   close() {
-    this._element.classList.remove(popupToggleClass);
-    document.removeEventListener('keydown', (evt) => this._handleEscClose(evt))
+    this._element.classList.remove(this._popupToggleClass);
+    document.removeEventListener('keydown', this._handleEscClose)
   }
 
   _handleEscClose(evt) {

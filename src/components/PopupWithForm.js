@@ -1,18 +1,14 @@
-import {
-  formSelector,
-  formInputSelector
-} from "../utils/constants.js";
 import Popup from "./Popup.js";
 
 export default class PopupWithForm extends Popup {
-  constructor(selector, handleSubmit) {
-    super(selector);
+  constructor(selector, popupToggleClass, popupCloseButtonSelector, formSelector, formInputSelector, handleSubmit) {
+    super(selector, popupToggleClass, popupCloseButtonSelector);
     this._form = this._element.querySelector(formSelector);
+    this._inputList = this._form.querySelectorAll(formInputSelector);
     this._handleSubmit = handleSubmit;
   }
 
-  _getInputValues() {
-    this._inputList = this._form.querySelectorAll(formInputSelector);
+  getInputValues() {
     this._formValues = {};
     this._inputList.forEach((input) => {
       this._formValues[input.name] = input.value;
@@ -21,7 +17,6 @@ export default class PopupWithForm extends Popup {
   }
 
   setInputValues(data) {
-    this._inputList = this._form.querySelectorAll(formInputSelector);
     this._inputList.forEach((input) => {
       if (data[input.name]) {
         input.value = data[input.name];
