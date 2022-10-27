@@ -60,6 +60,9 @@ const initialCards = [
   }
 ];
 
+const serverUrl = 'https://mesto.nomoreparties.co/v1/cohort-52';
+const serverToken = 'fffac5cb-2beb-4c6d-b998-0bdeed4853fd';
+
 export {
   nameElementSelector,
   occupationElementSelector,
@@ -79,5 +82,7 @@ export {
   popupToggleClass,
   postTemplate,
   validationConfig,
-  initialCards
+  initialCards,
+  serverUrl,
+  serverToken
 };

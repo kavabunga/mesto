@@ -18,7 +18,9 @@ import {
   cardsContainerSelector,
   postTemplate,
   validationConfig,
-  initialCards
+  initialCards,
+  serverUrl,
+  serverToken
 } from '../utils/constants.js';
 import UserInfo from '../components/UserInfo.js';
 import Section from '../components/Section.js';
@@ -26,6 +28,23 @@ import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
 import Card from '../components/Card.js';
 import FormValidator from '../components/FormValidator.js';
+import Api from '../components/Api.js';
+
+const api = new Api({
+  baseUrl: serverUrl,
+  headers: {
+    authorization: serverToken,
+    'Content-Type': 'application/json'
+  }
+});
+
+api.getData('users/me');
+api.getData('cards');
+api.patchData({
+  name: 'Dusya',
+  about: 'Mechanic'
+}, 'users/me');
+// api.getData('users/me');
 
 const postValidator = new FormValidator(validationConfig, formAddItemSelector);
 const profileValidator = new FormValidator(validationConfig, formProfileSelector);
