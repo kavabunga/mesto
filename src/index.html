@@ -12,10 +12,13 @@
     </header>
     <main class="content page__element">
       <section class="profile">
-        <img src="<%=require('./images/profile__image.jpg')%>" alt="Жак-Ив Кусто" class="profile__image">
+        <div class="profile__image-container">
+          <img src="data:" alt="Grey Box" class="profile__image">
+          <button type="button" class="profile__image-edit-button"></button>
+        </div>
         <div class="profile__info">
-          <h1 class="profile__name">Жак-Ив Кусто</h1>
-          <p class="profile__about">Исследователь океана</p>
+          <h1 class="profile__name"></h1>
+          <p class="profile__about"></p>
           <button type="button" class="profile__edit-button"></button>
         </div>
         <button type="button" class="profile__add-button"></button>
@@ -40,6 +43,21 @@
             <label>
               <input type="text" class="form__input form__input_name_about" name="about" placeholder="Профессия" required minlength="2" maxlength="200">
               <span class="form__input-error input-about-error"></span>
+            </label>
+          </fieldset>
+          <button type="submit" class="form__submit-button">Сохранить</button>
+        </form>
+        <button type="button" class="popup__close-button"></button>
+      </div>
+    </div>
+    <div class="popup popup_type_edit-avatar">
+      <div class="popup__container">
+        <h2 class="popup__title">Обновить аватар</h2>
+        <form class="form form_type_edit-avatar" name="form" novalidate>
+          <fieldset class="form__fieldset">
+            <label>
+              <input type="url" class="form__input form__input_name_image-link" name="link" placeholder="Ссылка на картинку" required>
+              <span class="form__input-error input-link-error"></span>
             </label>
           </fieldset>
           <button type="submit" class="form__submit-button">Сохранить</button>

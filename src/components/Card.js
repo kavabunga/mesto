@@ -27,12 +27,11 @@ export default class Card {
   }
 
   _setLikes() {
-    const count = this._getLikes();
-    this._likeCountElement.textContent = count;
+    this._likeCountElement.textContent = this._getLikes();
   }
 
   _checkLike() {
-    return !!this._likes.find(element => element._id === this._user);
+    return this._likes.find(element => element._id === this._user);
   }
 
   _checkOwner() {
@@ -68,14 +67,6 @@ export default class Card {
     this._setLikes();
     return this._element;
   };
-
-  // _handleImageElementClick() {
-  //   this._openPreviewPopup(this._name, this._image);
-  // }
-
-  // _handleDeleteButtonElementClick() {
-  //   this.removePost();
-  // }
 
   _handleLikeButtonElementClick() {
     this._likePost();

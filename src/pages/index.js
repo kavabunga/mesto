@@ -2,6 +2,8 @@ import './index.css';
 import {
   nameElementSelector,
   aboutElementSelector,
+  userImageElementSelector,
+  popupAvatarSelector,
   popupToggleClass,
   popupCloseButtonSelector,
   popupProfileSelector,
@@ -14,8 +16,10 @@ import {
   formInputSelector,
   formProfileSelector,
   formAddItemSelector,
+  formAvatarSelector,
   profileEditButton,
   postAddButton,
+  avatarEditButton,
   cardsContainerSelector,
   postTemplate,
   validationConfig,
@@ -30,7 +34,6 @@ import PopupWithConfirmation from '../components/PopupWithConfirmation.js';
 import Card from '../components/Card.js';
 import FormValidator from '../components/FormValidator.js';
 import Api from '../components/Api.js';
-import { post } from 'jquery';
 
 const api = new Api({
   baseUrl: serverUrl,
@@ -44,10 +47,17 @@ const postValidator = new FormValidator(
   validationConfig,
   formAddItemSelector
 );
+
 const profileValidator = new FormValidator(
   validationConfig,
   formProfileSelector
 );
+
+const avatarValidator = new FormValidator(
+  validationConfig,
+  formAvatarSelector
+);
+
 const previewPopup = new PopupWithImage(
   popupPreviewSelector,
   popupToggleClass,
@@ -57,6 +67,7 @@ const previewPopup = new PopupWithImage(
 );
 
 previewPopup.setEventListeners();
+
 const confirmationDeletePopup = new PopupWithConfirmation(
   popupConfirmationDeleteSelector,
   popupToggleClass,
@@ -67,11 +78,13 @@ const confirmationDeletePopup = new PopupWithConfirmation(
     confirmationDeletePopup.close();
   }
 );
+
 confirmationDeletePopup.setEventListeners();
 
 const userInfo = new UserInfo(
   nameElementSelector,
-  aboutElementSelector
+  aboutElementSelector,
+  userImageElementSelector
 );
 
 function renderPost (item) {
@@ -83,7 +96,7 @@ function createCard(item) {
   const card = new Card(
     item,
     postTemplate,
-    user,
+    userInfo.id,
     () => {
       previewPopup.open(item);
     },
@@ -112,8 +125,9 @@ const postPopup = new PopupWithForm(
     postValidator.activateLoadingIndication();
     postValidator.disableButton();
     const values = postPopup.getInputValues();
-    renderPost(values);
     api.postData(values, 'cards')
+    .then(res => renderPost(res))
+    .catch(err => console.log(err))
     .finally(res => {
       postValidator.deactivateLoadingIndication();
       postPopup.close();
@@ -134,7 +148,9 @@ const profilePopup = new PopupWithForm(
     profileValidator.activateLoadingIndication();
     const values = profilePopup.getInputValues();
     userInfo.setUserInfo(values);
+    userInfo.renderUserInfo();
     api.patchData(values, 'users/me')
+    .catch(err => console.log(err))
     .finally(res => {
       profileValidator.deactivateLoadingIndication();
       profilePopup.close();
@@ -144,24 +160,57 @@ const profilePopup = new PopupWithForm(
 
 profilePopup.setEventListeners();
 
+const avatarPopup = new PopupWithForm(
+  popupAvatarSelector,
+  popupToggleClass,
+  popupCloseButtonSelector,
+  formSelector,
+  formInputSelector,
+  (evt) => {
+    evt.preventDefault();
+    avatarValidator.activateLoadingIndication();
+    const values = avatarPopup.getInputValues();
+    console.log(values);
+    console.log(values.link);
+    userInfo.setUserImage(values.link);
+    userInfo.renderUserImage();
+    api.patchData({
+        avatar: values.link
+      }, 'users/me/avatar')
+    .catch(err => console.log(err))
+    .finally(res => {
+      avatarValidator.deactivateLoadingIndication();
+      avatarPopup.close();
+    })
+  }
+)
+
+avatarPopup.setEventListeners();
+
 const postsSection = new Section({
-  items: [],
-  renderer: (item) => renderPost(item)
-},
-cardsContainerSelector
+    items: [],
+    renderer: (item) => renderPost(item)
+  },
+  cardsContainerSelector
 );
 
 const cardsPromise = api.getData('cards');
 const userPromise = api.getData('users/me');
-let user;
 
 Promise.all([cardsPromise, userPromise])
   .then(res => {
     postsSection.initialArray = res[0].reverse();
-    user = res[1]._id;
+    userInfo.setUserImage(res[1].avatar);
+    userInfo.setUserInfo({
+      name: res[1].name,
+      about: res[1].about,
+    });
+    userInfo.setUserId(res[1]._id);
   })
   .then(res => {
-    postsSection.renderItems()
+    postsSection.renderItems();
+    userInfo.renderUserInfo();
+    userInfo.renderUserImage();
   })
   .catch(err => {
     console.log(err)
@@ -179,5 +228,11 @@ postAddButton.addEventListener('click', () => {
   postPopup.open();
 });
 
+avatarEditButton.addEventListener('click', () => {
+  avatarValidator.resetValidation();
+  avatarPopup.open();
+});
+
 postValidator.enableValidation();
 profileValidator.enableValidation();
+avatarValidator.enableValidation();
