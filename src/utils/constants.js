@@ -1,7 +1,8 @@
 const nameElementSelector = '.profile__name';
-const occupationElementSelector = '.profile__occupation';
+const aboutElementSelector = '.profile__about';
 const popupProfileSelector = '.popup_type_edit-profile';
 const popupAddItemSelector = '.popup_type_add-item';
+const popupConfirmationDeleteSelector = '.popup_type_delete-confirmation';
 const popupPreviewSelector = '.popup_type_preview';
 const popupPreviewImageSelector = '.popup__image';
 const popupPreviewCaptionSelector = '.popup__caption';
@@ -22,6 +23,7 @@ const postTemplate = {
   nameSelector: '.element__name',
   deleteButtonSelector: '.element__delete-button',
   likeButtonSelector: '.element__heart-button',
+  likeCountSelector: '.element__heart-counter',
   likeToggleClass: 'element__heart-button_active'
 };
 
@@ -65,9 +67,10 @@ const serverToken = 'fffac5cb-2beb-4c6d-b998-0bdeed4853fd';
 
 export {
   nameElementSelector,
-  occupationElementSelector,
+  aboutElementSelector,
   popupProfileSelector,
   popupAddItemSelector,
+  popupConfirmationDeleteSelector,
   popupPreviewSelector,
   popupPreviewImageSelector,
   popupPreviewCaptionSelector,
@@ -82,7 +85,6 @@ export {
   popupToggleClass,
   postTemplate,
   validationConfig,
-  initialCards,
   serverUrl,
   serverToken
 };

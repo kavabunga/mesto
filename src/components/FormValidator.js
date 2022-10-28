@@ -4,6 +4,7 @@ export default class FormValidator {
     this._formElement = document.querySelector(formElementSelector);
     this._inputList = Array.from(this._formElement.querySelectorAll(this._validationConfig.inputSelector));
     this._buttonElement = this._formElement.querySelector(this._validationConfig.submitButtonSelector);
+    this._buttonElementText = this._buttonElement.textContent;
   }
 
   _showInputError(inputElement) {
@@ -44,6 +45,14 @@ export default class FormValidator {
     this._buttonElement.classList.add(this._validationConfig.inactiveButtonClass);
     this._buttonElement.setAttribute('disabled', 'disabled');
   };
+
+  activateLoadingIndication() {
+    this._buttonElement.textContent = 'Сохранение...';
+  }
+
+  deactivateLoadingIndication() {
+    this._buttonElement.textContent = this._buttonElementText;
+  }
 
   _setEventListeners() {
     this._toggleButtonState();

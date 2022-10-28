@@ -5,7 +5,7 @@ export default class Api {
   }
 
   _fetchRequest(url, options) {
-    fetch(url, options )
+    return fetch(url, options )
     .then(res => {
       if (res.ok) {
         return res.json();
@@ -13,7 +13,6 @@ export default class Api {
       return Promise.reject(`Ошибка: ${res.status}`);
     })
     .then(res => {
-      console.log(res);
       return res;
     })
     .catch(err => {
@@ -29,7 +28,7 @@ export default class Api {
       headers: this._headers,
       body: JSON.stringify(data)
     };
-    this._fetchRequest(url, options);
+    return this._fetchRequest(url, options);
   }
 
   getData(directory) {
@@ -38,7 +37,7 @@ export default class Api {
       method: 'GET',
       headers: this._headers,
     };
-    this._fetchRequest(url, options);
+    return this._fetchRequest(url, options);
   }
 
   patchData(data, directory) {
@@ -48,7 +47,7 @@ export default class Api {
       headers: this._headers,
       body: JSON.stringify(data)
     };
-    this._fetchRequest(url, options);
+    return this._fetchRequest(url, options);
   }
 
   deleteData(directory, itemId) {
@@ -57,24 +56,16 @@ export default class Api {
       method: 'DELETE',
       headers: this._headers,
     };
-    this._fetchRequest(url, options);
+    return this._fetchRequest(url, options);
   }
 
-  likeCard(itemId) {
+  likeCard(itemId, state) {
     const url = `${this._baseUrl}/cards/${itemId}/likes`;
+    const method = state ? 'PUT' : 'DELETE';
     const options = {
-      method: 'PUT',
+      method: method,
       headers: this._headers,
     };
-    this._fetchRequest(url, options);
-  }
-
-  dislikeCard(itemId) {
-    const url = `${this._baseUrl}/cards/${itemId}/likes`;
-    const options = {
-      method: 'DELETE',
-      headers: this._headers,
-    };
-    this._fetchRequest(url, options);
+    return this._fetchRequest(url, options);
   }
 }
