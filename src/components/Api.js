@@ -12,13 +12,6 @@ export default class Api {
       }
       return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .then(res => {
-      return res;
-    })
-    .catch(err => {
-      console.log(err);
-    });
-
   }
 
   postData(data, directory) {
@@ -31,8 +24,17 @@ export default class Api {
     return this._fetchRequest(url, options);
   }
 
-  getData(directory) {
-    const url = `${this._baseUrl}/${directory}`;
+  getUserData() {
+    const url = `${this._baseUrl}/users/me`;
+    const options = {
+      method: 'GET',
+      headers: this._headers,
+    };
+    return this._fetchRequest(url, options);
+  }
+
+  getCardsData() {
+    const url = `${this._baseUrl}/cards`;
     const options = {
       method: 'GET',
       headers: this._headers,

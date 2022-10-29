@@ -35,6 +35,8 @@ import Card from '../components/Card.js';
 import FormValidator from '../components/FormValidator.js';
 import Api from '../components/Api.js';
 
+let userId
+
 const api = new Api({
   baseUrl: serverUrl,
   headers: {
@@ -72,10 +74,15 @@ const confirmationDeletePopup = new PopupWithConfirmation(
   popupConfirmationDeleteSelector,
   popupToggleClass,
   popupCloseButtonSelector,
-  (evt) => {
-    evt.preventDefault();
-    confirmationDeletePopup._openedFrom.removePost();
-    confirmationDeletePopup.close();
+  function handleSubmit (id, removePostHandler) {
+    api.deleteData('cards', id)
+    .then(res => {
+      removePostHandler();
+      this.close();
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }
 );
 
@@ -96,18 +103,22 @@ function createCard(item) {
   const card = new Card(
     item,
     postTemplate,
-    userInfo.id,
+    userId,
     () => {
       previewPopup.open(item);
     },
-    function confirmDelete() {
-      confirmationDeletePopup.open(this);
+    function confirmDelete (id, removePostHandler) {
+      confirmationDeletePopup.open(id, removePostHandler);
     },
-    function deleteCard (id) {
-      return api.deleteData('cards', id);
-    },
-    function likeCard (id, state) {
-      return api.likeCard(id, state);
+    function handleLike (id, state, setLikes, setLikeArray) {
+      return api.likeCard(id, state)
+        .then(res => {
+          setLikeArray(res.likes);
+          setLikes();
+        })
+        .catch(err => {
+          console.log(err)
+        });
     }
   );
   const cardElement = card.generateCard();
@@ -120,17 +131,19 @@ const postPopup = new PopupWithForm(
   popupCloseButtonSelector,
   formSelector,
   formInputSelector,
-  (evt) => {
-    evt.preventDefault();
-    postValidator.activateLoadingIndication();
+  function handleSubmit (values) {
+    this.activateLoadingIndication();
     postValidator.disableButton();
-    const values = postPopup.getInputValues();
     api.postData(values, 'cards')
-    .then(res => renderPost(res))
-    .catch(err => console.log(err))
+    .then(res => {
+      renderPost(res);
+      this.close();
+    })
+    .catch(err => {
+      console.log(err)
+    })
     .finally(res => {
-      postValidator.deactivateLoadingIndication();
-      postPopup.close();
+      this.deactivateLoadingIndication();
     })
   }
 );
@@ -143,17 +156,19 @@ const profilePopup = new PopupWithForm(
   popupCloseButtonSelector,
   formSelector,
   formInputSelector,
-  (evt) => {
-    evt.preventDefault();
-    profileValidator.activateLoadingIndication();
-    const values = profilePopup.getInputValues();
-    userInfo.setUserInfo(values);
-    userInfo.renderUserInfo();
+  function handleSubmit (values) {
+    this.activateLoadingIndication();
+    profileValidator.disableButton();
     api.patchData(values, 'users/me')
-    .catch(err => console.log(err))
+    .then(res => {
+      userInfo.setUserInfo(values);
+      this.close();
+    })
+    .catch(err => {
+      console.log(err)
+    })
     .finally(res => {
-      profileValidator.deactivateLoadingIndication();
-      profilePopup.close();
+      this.deactivateLoadingIndication();
     })
   }
 )
@@ -166,51 +181,46 @@ const avatarPopup = new PopupWithForm(
   popupCloseButtonSelector,
   formSelector,
   formInputSelector,
-  (evt) => {
-    evt.preventDefault();
-    avatarValidator.activateLoadingIndication();
-    const values = avatarPopup.getInputValues();
-    console.log(values);
-    console.log(values.link);
-    userInfo.setUserImage(values.link);
-    userInfo.renderUserImage();
+  function handleSubmit (values) {
+    this.activateLoadingIndication();
+    avatarValidator.disableButton();
     api.patchData({
         avatar: values.link
       }, 'users/me/avatar')
-    .catch(err => console.log(err))
+    .then(res => {
+      userInfo.setUserImage(values.link);
+      this.close();
+    })
+    .catch(err => {
+      console.log(err)
+    })
     .finally(res => {
-      avatarValidator.deactivateLoadingIndication();
-      avatarPopup.close();
+      this.deactivateLoadingIndication();
     })
   }
 )
 
 avatarPopup.setEventListeners();
 
-const postsSection = new Section({
-    items: [],
-    renderer: (item) => renderPost(item)
+const postsSection = new Section(
+  function (item) {
+    renderPost(item)
   },
   cardsContainerSelector
 );
 
-const cardsPromise = api.getData('cards');
-const userPromise = api.getData('users/me');
+const cardsPromise = api.getCardsData();
+const userPromise = api.getUserData();
 
 Promise.all([cardsPromise, userPromise])
   .then(res => {
-    postsSection.initialArray = res[0].reverse();
     userInfo.setUserImage(res[1].avatar);
     userInfo.setUserInfo({
       name: res[1].name,
       about: res[1].about,
     });
-    userInfo.setUserId(res[1]._id);
-  })
-  .then(res => {
-    postsSection.renderItems();
-    userInfo.renderUserInfo();
-    userInfo.renderUserImage();
+    userId = res[1]._id;
+    postsSection.renderItems(res[0].reverse());
   })
   .catch(err => {
     console.log(err)

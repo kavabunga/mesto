@@ -1,5 +1,5 @@
 export default class Card {
-  constructor({name = '', link = '', likes = [], _id = '', owner = {}}, templateData, user, handleCardClick, handleRemoveClick, handleRemove, handleLike) {
+  constructor({name = '', link = '', likes = [], _id = '', owner = {}}, templateData, user, handleCardClick, handleRemoveClick, handleLike) {
     this._image = link;
     this._name = name;
     this._likes = likes;
@@ -16,9 +16,7 @@ export default class Card {
     this._likeToggleClass = templateData.likeToggleClass;
     this._handleCardClick = handleCardClick;
     this._handleRemoveClick = handleRemoveClick;
-    this._handleRemove = handleRemove;
     this._handleLike = handleLike;
-    this._isLiked = this._checkLike();
     this._isMine = this._checkOwner();
   };
 
@@ -26,12 +24,22 @@ export default class Card {
     return this._likes.length
   }
 
+  _setLikeArray(arr) {
+    this._likes = arr;
+  }
+
   _setLikes() {
     this._likeCountElement.textContent = this._getLikes();
+    this._checkLike();
+    if (this._isLiked) {
+      this._activateHeart();
+    } else {
+      this._deactivateHeart();
+    }
   }
 
   _checkLike() {
-    return this._likes.find(element => element._id === this._user);
+    this._isLiked = !!this._likes.find(element => element._id === this._user);
   }
 
   _checkOwner() {
@@ -49,7 +57,7 @@ export default class Card {
 
   _setEventListeners() {
     this._imageElement.addEventListener('click', this._handleCardClick);
-    this._deleteButtonElement.addEventListener('click', this._handleRemoveClick.bind(this)); //this._handleDeleteButtonElementClick.bind(this)
+    this._deleteButtonElement.addEventListener('click', () => this._handleRemoveClick(this._id, this._removePost.bind(this)));
     this._likeButtonElement.addEventListener('click', this._handleLikeButtonElementClick.bind(this));
   };
 
@@ -58,9 +66,6 @@ export default class Card {
     this._imageElement.src = this._image;
     this._imageElement.alt = this._name;
     this._nameElement.textContent = this._name;
-    if (this._isLiked) {
-      this._likePost();
-    }
     if (!this._isMine) {
       this._deleteButtonElement.remove();
     }
@@ -69,27 +74,19 @@ export default class Card {
   };
 
   _handleLikeButtonElementClick() {
-    this._likePost();
-    this._isLiked = !this._isLiked;
-    this._handleLike(this._id, this._isLiked)
-      .then(res => {
-          this._likes = res.likes
-        })
-      .then(res => {
-          this._setLikes()
-        })
-      .catch(err => {
-          console.log(err)
-        });
+    this._handleLike(this._id, !this._isLiked, this._setLikes.bind(this), this._setLikeArray.bind(this));
   }
 
-  removePost() {
+  _removePost() {
     this._element.remove();
-    this._handleRemove(this._id);
   };
 
-  _likePost() {
-    this._likeButtonElement.classList.toggle(this._likeToggleClass);
+  _activateHeart() {
+    this._likeButtonElement.classList.add(this._likeToggleClass);
+  }
+
+  _deactivateHeart() {
+    this._likeButtonElement.classList.remove(this._likeToggleClass);
   }
 
 }
