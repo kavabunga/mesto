@@ -143,6 +143,7 @@ const postPopup = new PopupWithForm(
       console.log(err)
     })
     .finally(res => {
+      postValidator.enableButton();
       this.deactivateLoadingIndication();
     })
   }
@@ -161,13 +162,14 @@ const profilePopup = new PopupWithForm(
     profileValidator.disableButton();
     api.patchData(values, 'users/me')
     .then(res => {
-      userInfo.setUserInfo(values);
+      userInfo.setUserInfo(res);
       this.close();
     })
     .catch(err => {
       console.log(err)
     })
     .finally(res => {
+      profileValidator.enableButton();
       this.deactivateLoadingIndication();
     })
   }
@@ -188,13 +190,14 @@ const avatarPopup = new PopupWithForm(
         avatar: values.link
       }, 'users/me/avatar')
     .then(res => {
-      userInfo.setUserImage(values.link);
+      userInfo.setUserImage(res.avatar);
       this.close();
     })
     .catch(err => {
       console.log(err)
     })
     .finally(res => {
+      avatarValidator.enableButton();
       this.deactivateLoadingIndication();
     })
   }
@@ -215,10 +218,7 @@ const userPromise = api.getUserData();
 Promise.all([cardsPromise, userPromise])
   .then(res => {
     userInfo.setUserImage(res[1].avatar);
-    userInfo.setUserInfo({
-      name: res[1].name,
-      about: res[1].about,
-    });
+    userInfo.setUserInfo(res[1]);
     userId = res[1]._id;
     postsSection.renderItems(res[0].reverse());
   })

@@ -34,10 +34,14 @@ export default class FormValidator {
     if (this._hasInvalidInput()) {
       this.disableButton();
     } else {
-      this._buttonElement.classList.remove(this._validationConfig.inactiveButtonClass);
-      this._buttonElement.removeAttribute('disabled');
+      this.enableButton();
     }
   };
+
+  enableButton() {
+    this._buttonElement.classList.remove(this._validationConfig.inactiveButtonClass);
+    this._buttonElement.removeAttribute('disabled');
+  }
 
   disableButton() {
     this._buttonElement.classList.add(this._validationConfig.inactiveButtonClass);
